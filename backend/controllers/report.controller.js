@@ -5,7 +5,7 @@ import HealthEvaluation from '../models/HealthEvaluation.model.js';
 import Feedback from '../models/feedback.model.js';
 import Inquiry from '../models/inquiry.model.js';
 import Appointment from '../models/BloodDonationAppointment.model.js';
-import Manager from '../models/SystemManager.model.js';
+import SystemManager from '../models/SystemManager.model.js';
 import Donor from '../models/donor.model.js';
 import Hospital from '../models/hospital.model.js';
 import EmergencyBR from '../models/EmergencyBR.model.js'; // Adjust the path to your model
@@ -936,7 +936,7 @@ export const generateAppointmentReport = async (req, res) => {
 
 export const generateSystemAdminReport = async (req, res) => {
   try {
-    const managers = await Manager.find({})
+    const managers = await SystemManager.find({})
       .select('firstName lastName email phoneNumber nic address dob role activeStatus')
       .sort({ createdAt: -1 });
 

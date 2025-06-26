@@ -1,7 +1,7 @@
 import Donor from '../models/donor.model.js';
 import createToken from '../utils/token.js';
 import Hospital from '../models/hospital.model.js';
-import Manager from '../models/SystemManager.model.js';
+import SystemManager from '../models/SystemManager.model.js';
 import HospitalAdmin from '../models/HospitalAdmin.model.js';
 
 export const signinHD = async (req, res) => {
@@ -84,7 +84,7 @@ export const signinA = async (req, res) => {
     }
 
     try {
-        const user = await Manager.signin(email, password);
+        const user = await SystemManager.signin(email, password);
         if (!user.activeStatus) {
             return res.status(403).json({ message: 'Your account has been deactivated' });
         }

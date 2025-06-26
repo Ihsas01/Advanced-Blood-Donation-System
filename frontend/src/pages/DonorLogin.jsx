@@ -3,6 +3,7 @@ import { Button, Card, Label, TextInput, Checkbox, Spinner } from "flowbite-reac
 import { Link, useNavigate } from "react-router-dom";
 import { useSignin } from '../hooks/useSignin';
 import { toast } from 'react-toastify';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 export default function DonorLogin() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function DonorLogin() {
     rememberMe: false,
   });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -41,18 +43,14 @@ export default function DonorLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate form and handle client-side errors
     if (!validateForm()) {
       if (errors.email) toast.error(errors.email);
       if (errors.password) toast.error(errors.password);
       return;
     }
-
     try {
-      await signinD(formData); // Let useSignin handle success (toast, navigation)
+      await signinD(formData);
     } catch (err) {
-      // Handle network or unexpected errors
       const errorMsg =
         err?.response?.data?.error ||
         (err.message === 'Network Error'
@@ -62,10 +60,8 @@ export default function DonorLogin() {
     }
   };
 
-  // Helper function to handle errors consistently
   const handleErrorResponse = (errorMsg) => {
     const lowerMsg = errorMsg.toLowerCase();
-
     if (lowerMsg.includes('password')) {
       toast.error('Incorrect password. Please try again.');
       setErrors((prev) => ({ ...prev, password: 'Incorrect password' }));
@@ -78,26 +74,24 @@ export default function DonorLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-200 via-pink-200 to-purple-200 animate-gradient-x p-6">
-      <Card className="relative w-full max-w-md p-8 bg-white/85 backdrop-blur-3xl rounded-3xl shadow-xl border border-red-300/20 transition-all duration-300 hover:shadow-2xl hover:scale-102">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-colour1 via-white to-colour4 animate-fade-in p-6">
+      <div className="sexy-card bg-white/80 backdrop-blur-2xl rounded-3xl shadow-2xl border border-colour3/20 w-full max-w-md p-10 animate-fade-in-up">
         <Button
           onClick={() => navigate("/Hospital_login")}
           size="sm"
-          className="absolute top-4 right-4 bg-gradient-to-r from-red-500 to-pink-500 text-white border-none hover:from-red-600 hover:to-pink-600 focus:ring-4 focus:ring-red-300 transition-all duration-300 rounded-full"
+          className="absolute top-4 right-4 bg-colour3 hover:bg-colour2 text-white border-none focus:ring-4 focus:ring-colour2/40 transition-all duration-300 rounded-full z-10"
         >
           Hospital Login
         </Button>
-
-        <h2 className="text-4xl font-extrabold text-center bg-gradient-to-r from-red-700 to-pink-700 bg-clip-text text-transparent mb-8 tracking-tight drop-shadow-md">
-          DonorLogin
+        <h2 className="text-4xl font-extrabold text-center bg-gradient-to-r from-colour4 to-colour3 bg-clip-text text-transparent mb-8 tracking-tight drop-shadow-md animate-fade-in-up">
+          Donor Login
         </h2>
-
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <Label 
-              htmlFor="email" 
-              value="Email" 
-              className="text-gray-900 font-semibold tracking-wide" 
+            <Label
+              htmlFor="email"
+              value="Email"
+              className="text-colour4 font-semibold tracking-wide animate-fade-in-up"
             />
             <TextInput
               id="email"
@@ -108,24 +102,23 @@ export default function DonorLogin() {
               required
               disabled={loading}
               color={errors.email ? 'failure' : 'gray'}
-              className="mt-2 rounded-xl border-gray-300 focus:ring-2 focus:ring-red-400 focus:border-red-400 transition-all duration-300 bg-white/50"
+              className="mt-2 rounded-xl border-colour3/30 focus:ring-2 focus:ring-colour3 focus:border-colour3 transition-all duration-300 bg-white/70 animate-fade-in-up"
             />
             {errors.email && (
-              <p className="text-red-600 text-sm mt-1.5 font-medium animate-pulse">
+              <p className="text-red-400 text-sm mt-1.5 font-medium animate-fade-in-up">
                 {errors.email}
               </p>
             )}
           </div>
-
-          <div>
-            <Label 
-              htmlFor="password" 
-              value="Password" 
-              className="text-gray-900 font-semibold tracking-wide" 
+          <div className="relative">
+            <Label
+              htmlFor="password"
+              value="Password"
+              className="text-colour4 font-semibold tracking-wide animate-fade-in-up"
             />
             <TextInput
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
@@ -133,35 +126,42 @@ export default function DonorLogin() {
               minLength={6}
               disabled={loading}
               color={errors.password ? 'failure' : 'gray'}
-              className="mt-2 rounded-xl border-gray-300 focus:ring-2 focus:ring-red-400 focus:border-red-400 transition-all duration-300 bg-white/50"
+              className="mt-2 rounded-xl border-colour3/30 focus:ring-2 focus:ring-colour3 focus:border-colour3 transition-all duration-300 bg-white/70 animate-fade-in-up pr-12"
             />
+            <button
+              type="button"
+              tabIndex={-1}
+              className="absolute right-4 top-10 text-colour3 hover:text-colour4 transition-colors duration-200 focus:outline-none"
+              onClick={() => setShowPassword((prev) => !prev)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <HiEyeOff className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
+            </button>
             {errors.password && (
-              <p className="text-red-600 text-sm mt-1.5 font-medium animate-pulse">
+              <p className="text-red-400 text-sm mt-1.5 font-medium animate-fade-in-up">
                 {errors.password}
               </p>
             )}
           </div>
-
-          <div className="flex items-center">
+          <div className="flex items-center animate-fade-in-up">
             <Checkbox
               id="rememberMe"
               checked={formData.rememberMe}
               onChange={handleChange}
               disabled={loading}
-              className="h-4 w-4 text-red-600 focus:ring-red-400 border-gray-300 rounded"
+              className="h-4 w-4 text-colour3 focus:ring-colour3 border-colour3/30 rounded"
             />
             <Label
               htmlFor="rememberMe"
-              className="ml-2 text-sm font-medium text-gray-900"
+              className="ml-2 text-sm font-medium text-colour4"
             >
               Remember me
             </Label>
           </div>
-
           <Button
             type="submit"
             size="lg"
-            className="w-full bg-gradient-to-r from-red-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:from-red-700 hover:to-pink-700 focus:ring-4 focus:ring-red-300 transition-all duration-300 disabled:opacity-50"
+            className="w-full bg-colour3 hover:bg-colour2 text-white font-bold rounded-xl shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-colour2/40 animate-fade-in-up disabled:opacity-50"
             disabled={loading}
           >
             {loading ? (
@@ -173,36 +173,18 @@ export default function DonorLogin() {
               'Login'
             )}
           </Button>
-
-          <p className="text-center text-sm text-gray-700 font-medium">
+          <p className="text-center text-sm text-colour4 font-medium animate-fade-in-up">
             Don't have an account?{' '}
             <button
               onClick={() => navigate("/register")}
-              className="text-red-600 font-semibold hover:text-red-700 transition-colors duration-200"
+              className="text-colour3 font-semibold hover:text-colour4 transition-colors duration-200"
               disabled={loading}
             >
               Sign Up
             </button>
           </p>
         </form>
-      </Card>
-      <style jsx>{`
-        @keyframes gradient {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient 12s ease infinite;
-        }
-      `}</style>
+      </div>
     </div>
   );
 }

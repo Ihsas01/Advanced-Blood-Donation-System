@@ -4,7 +4,7 @@ import BloodDonationAppointment from '../models/BloodDonationAppointment.model.j
 import BloodInventory from '../models/BloodInventory.model.js';
 import EmergencyBR from '../models/EmergencyBR.model.js';
 import HospitalAdmin from '../models/HospitalAdmin.model.js';
-import Manager from '../models/SystemManager.model.js';
+import SystemManager from '../models/SystemManager.model.js';
 import Inquiry from '../models/inquiry.model.js';
 
 export const getDonorData = async (req, res) => {

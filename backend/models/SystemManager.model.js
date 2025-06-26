@@ -82,6 +82,6 @@ systemManagerSchema.statics.signin = async function (email, password) {
     return manager;
 };
 
-const Manager = mongoose.model('Manager', systemManagerSchema);
+const SystemManager = mongoose.model('SystemManager', systemManagerSchema);
 
-export default Manager;
+export default SystemManager;
