@@ -1,5 +1,6 @@
-import React from "react";
-import { Card, Accordion, Button } from "flowbite-react";
+import React, { useState } from "react";
+import { Button } from "flowbite-react";
+import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 
 export default function FAQ() {
   const faqSections = [
@@ -65,54 +66,90 @@ export default function FAQ() {
     },
   ];
 
+  // Accordion state
+  const [openSection, setOpenSection] = useState(null);
+  const [openQuestion, setOpenQuestion] = useState({});
+
+  const handleSectionToggle = (idx) => {
+    setOpenSection(openSection === idx ? null : idx);
+    setOpenQuestion({});
+  };
+  const handleQuestionToggle = (sectionIdx, qIdx) => {
+    setOpenQuestion((prev) => ({
+      ...prev,
+      [sectionIdx]: prev[sectionIdx] === qIdx ? null : qIdx,
+    }));
+  };
+
   return (
-    <div
-      className="py-16 bg-gray-50 min-h-screen"
-      style={{
-        backgroundImage: "url('/images/blood-donation-bg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="container mx-auto px-6">
-        <h1 className="text-4xl font-bold text-center text-red-700 mb-8">
+    <div className="min-h-screen py-16 bg-gradient-to-br from-colour1 via-white to-colour4 flex items-center justify-center animate-fade-in">
+      <div className="container mx-auto px-6 max-w-4xl relative z-10">
+        <h1 className="text-5xl font-extrabold text-center text-colour4 mb-12 animate-fade-in-up drop-shadow-xl">
           Frequently Asked Questions (FAQ)
         </h1>
-
-        {/* FAQ Content */}
-        <Card className="bg-white shadow-lg rounded-lg border border-gray-200">
-          <Accordion flush>
-            {faqSections.map((section, index) => (
-              <Accordion.Panel key={index}>
-                <Accordion.Title className="text-xl font-semibold text-red-700 hover:text-red-800 focus:ring-red-300">
-                  {section.title}
-                </Accordion.Title>
-                <Accordion.Content>
-                  <div className="space-y-4">
-                    {section.items.map((item, idx) => (
-                      <div key={idx}>
-                        <strong className="text-gray-800">{item.question}</strong>
-                        <p className="text-gray-600 mt-1">{item.answer}</p>
-                      </div>
-                    ))}
-                  </div>
-                </Accordion.Content>
-              </Accordion.Panel>
-            ))}
-          </Accordion>
-
-          {/* Back Button */}
-          <div className="mt-6 flex justify-center">
-            <Button
-              gradientDuoTone="redToPink"
-              onClick={() => window.history.back()}
-              className="w-40"
+        <div className="space-y-8">
+          {faqSections.map((section, sIdx) => (
+            <div
+              key={sIdx}
+              className="sexy-card bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-8 animate-fade-in-up"
             >
-              Back
-            </Button>
-          </div>
-        </Card>
+              <button
+                className="w-full flex items-center justify-between text-2xl font-bold text-white focus:outline-none transition-colors duration-300 group"
+                onClick={() => handleSectionToggle(sIdx)}
+                aria-expanded={openSection === sIdx}
+              >
+                <span>{section.title}</span>
+                <span className="transition-transform duration-300 group-aria-expanded:rotate-180">
+                  {openSection === sIdx ? (
+                    <HiChevronUp className="text-3xl" />
+                  ) : (
+                    <HiChevronDown className="text-3xl" />
+                  )}
+                </span>
+              </button>
+              <div
+                className={`transition-all duration-500 overflow-hidden ${openSection === sIdx ? 'max-h-[1000px] mt-6' : 'max-h-0'}`}
+              >
+                <div className="space-y-4">
+                  {section.items.map((item, qIdx) => (
+                    <div
+                      key={qIdx}
+                      className="rounded-xl bg-white/80 p-4 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer animate-fade-in-up"
+                      onClick={() => handleQuestionToggle(sIdx, qIdx)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-semibold text-colour4">
+                          {item.question}
+                        </span>
+                        <span className="ml-4">
+                          {openQuestion[sIdx] === qIdx ? (
+                            <HiChevronUp className="text-xl text-colour3" />
+                          ) : (
+                            <HiChevronDown className="text-xl text-colour3" />
+                          )}
+                        </span>
+                      </div>
+                      <div
+                        className={`transition-all duration-500 text-colour4/90 ${openQuestion[sIdx] === qIdx ? 'max-h-40 mt-2 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}
+                      >
+                        <p className="text-base">{item.answer}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Back Button */}
+        <div className="mt-12 flex justify-center animate-fade-in-up">
+          <Button
+            className="w-40 bg-colour3 hover:bg-colour2 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-colour2/40"
+            onClick={() => window.history.back()}
+          >
+            Back
+          </Button>
+        </div>
       </div>
     </div>
   );
